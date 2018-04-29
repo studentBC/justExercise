@@ -10,26 +10,30 @@ struct ListNode {
 struct ListNode* removeElements(struct ListNode* head, int val) {
 	struct ListNode* searchPosition = head;
 	struct ListNode* beforeSearchPosition = head;
-	int count = 0;
 	//move the serchposition , beforesearchposition and remain head
+    if(head != NULL){
 	do{
 		if(searchPosition->val == val){
 			//find the first element in the first one
-			if(count == 0){
+			if(head->val == val){
 				head=head->next;
 			}else if( searchPosition->next == NULL){ //find the val in the last one
 				beforeSearchPosition->next = NULL;	
 			}else{
-				beforeSearchPosition->next = searchPosition->next;	
+				beforeSearchPosition->next = searchPosition->next;
 			}
 
-		}
-		count++;
-		beforeSearchPosition = searchPosition;
+		}else{
+            beforeSearchPosition = searchPosition;
+        }
+		
 		if(searchPosition->next!=NULL){
 			searchPosition = searchPosition->next;
-		}
-	}while(searchPosition != beforeSearchPosition);
+		}else{
+            searchPosition = NULL;
+        }
+	}while(searchPosition!=NULL);
+   }
 	return head;
 }
 int main(){
