@@ -6,6 +6,12 @@ typedef struct {
 
 /** initialize your data structure here. */
 MinStack* minStackCreate(int maxSize) {
+    //printf(" the max size is %d \n",maxSize);
+    MinStack * head = (MinStack *)malloc(sizeof(MinStack));
+    head->next = NULL;
+    head->used = false;
+    return head;
+    /*
     if (maxSize < 1){
         return NULL;
     }
@@ -21,6 +27,7 @@ MinStack* minStackCreate(int maxSize) {
     }
     loc -> next = NULL;
     return head;
+    */
 }
 
 void minStackPush(MinStack* obj, int x) {
@@ -58,18 +65,24 @@ void minStackPush(MinStack* obj, int x) {
 }
 
 void minStackPop(MinStack* obj) {
-    MinStack * loc = obj;
+    MinStack * loc = obj , * prev;
+    //printf(" min pop \n");
     while(loc->next) {
+            //printf("%d ,", loc->val);
+            prev = loc;
             loc = loc ->next;
         }
+    //printf("\n pop the last one is %d \n",loc->val);
     free(loc);
-    loc = NULL;
+    prev->next = NULL;
     return;
 }
 
 int minStackTop(MinStack* obj) {
     MinStack * loc = obj;
+    //printf(" min stack \n");
     while(loc->next) {
+        //printf("%d ,", loc->val);
         loc = loc ->next;
     }
     return loc->val;
@@ -79,8 +92,10 @@ int minStackGetMin(MinStack* obj) {
     if (obj) {
         MinStack * loc = obj;
         int min = loc->val;
+        //printf("%d ," , min);
         while(loc->next) {
                 loc = loc ->next;
+            //printf("%d ," ,loc->val);
                 if (loc->val < min ) {
                     min = loc->val;
                 }
@@ -104,11 +119,3 @@ void minStackFree(MinStack* obj) {
  * int param_4 = minStackGetMin(obj);
  * minStackFree(obj);
  */
-int main() {
- MinStack* =  minStackCreate();
- minStackPush(MinStack,-2);
- minStackPush(MinStack,0);
- minStackPush(MinStack,-3);
- minStackPop();
- printf("the min is %d",minStackGetMin());
-}
