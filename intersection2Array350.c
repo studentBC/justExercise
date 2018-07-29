@@ -1,10 +1,10 @@
-/**
- * Return an array of size *returnSize.
- * Note: The returned array must be malloced, assume caller calls free().
- */
 int* intersect(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize) {
      int length;bool oneIslonger = true;
     int* ans = NULL;
+    int* p1 = NULL;
+    int* p2 = NULL;
+      bool start = false;
+    int matchNumber,matchSize;
     if (nums1 == NULL || nums2 == NULL || nums1Size == 0 || nums2Size == 0) {
         returnSize = NULL;
         return NULL;
@@ -71,20 +71,51 @@ int* intersect(int* nums1, int nums1Size, int* nums2, int nums2Size, int* return
                 }
                 
         }
-        //printf("max is %d\n" ,max);
-        //printf("maxnumber is %d\n" ,maxNumber);
-        max--;
-        ans = (int* )calloc(max , sizeof(int));count = 0;
+       // printf("max is %d\n" ,max);
+       // printf("maxnumber is %d\n" ,maxNumber);
+        //max--;
+  //      ans = (int* )calloc(length , sizeof(int));count = 0;
         //returnSize = malloc(sizeof(int)*1);
-        *returnSize = max;
-        //printf("return size is %d \n",returnSize);
+        p1 = (int* )calloc(length , sizeof(int));count = 0;
+        p2 = (int* )calloc(length , sizeof(int));int count2 = 0; 
+      //  printf("return size is %d \n",returnSize);
           for (i = 0; i < nums1Size;i++) {
             if ( temp[i] == maxNumber) {
-                //printf("%d ,",nums1[i]);
-                ans[count] = nums1[i];
+                printf("%d ,",nums1[i]);
+                p1[count] = nums1[i];
                 count++;
             }
+              //for those continuous number
+            if(temp[i] == 1 && i!=nums1Size-1) {
+                start = true;
+                p2[0] = nums1[i];
+                count2 = 1;
+            }
+            if (start && temp[i] == count2+1) {
+                p2[count2] = nums1[i];
+                matchNumber = nums1[i];
+                count2++;
+            }
         }
+        matchSize = 0;
+        for (i = 0; i <nums2Size; i++) {
+            if (nums2[i] == matchNumber) {
+                matchSize++;
+            }
+        }
+        printf("count is %d count2 is %d and the length of matchsize is %d , match number is %d \n",count,count2,matchSize,matchNumber);
+        if (count > count2) {
+            ans = p1;
+        } else {
+            if (matchSize >= count2) {
+                ans = p2;
+                count = count2;
+            } else {
+                ans = p1;
+            }
+            
+        }
+        *returnSize = count;
         
     } else {
         for (i = 0; i < nums1Size; i++) {
@@ -120,23 +151,56 @@ int* intersect(int* nums1, int nums1Size, int* nums2, int nums2Size, int* return
                     prior = temp[i];
                 }
         }
-           printf("%d \n",max);
+           //printf("max is %d and the prior is %d \n",max,prior);
         for (j = 0; j < nums1Size; j++) {
             printf("%d ,",temp[j]);
         }
-        max--;
-        printf("max is %d \n",max);
-        printf("maxnumber is %d\n" ,maxNumber);
-        ans = (int* )calloc(max , sizeof(int));count = 0;
-        *returnSize = max;
+        //max--;
+        //printf("max is %d \n",max);//6
+        //printf("maxnumber is %d\n" ,maxNumber);//1
+        p1 = (int* )calloc(length , sizeof(int));count = 0;
+        p2 = (int* )calloc(length , sizeof(int));int count2 = 0;
+        
+        //printf("\n");
         for (i = 0; i < nums2Size;i++) {
             if ( temp[i] == maxNumber) {
-                ans[count] = nums2[i];
+                //printf("%d ," , nums2[i]);
+                p1[count] = nums2[i];
                 count++;
             }
+            if(temp[i] == 1 && i!=nums2Size-1) {
+                start = true;
+                 p2[0] = nums2[i];
+                count2 = 1;
+            }
+            if (start && temp[i] == count2+1) {
+                p2[count2] = nums2[i];
+                matchNumber = nums2[i];
+                count2++;
+            }
         }
+        matchSize = 0;
+        for (i = 0; i <nums1Size; i++) {
+            if (nums1[i] == matchNumber) {
+                matchSize++;
+            }
+        }
+        //printf("count is %d count2 is %d \n",count,count2);
+        if (count > count2) {
+            ans = p1;
+        } else {
+             if (matchSize >= count2) {
+                ans = p2;
+                count = count2;
+            } else {
+                ans = p1;
+            }
+            
+        }
+        *returnSize = count;
     }
     return ans;
 
 
 }
+
