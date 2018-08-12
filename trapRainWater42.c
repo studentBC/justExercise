@@ -46,3 +46,31 @@ int trap(int* height, int heightSize) {
     }
     return area;
 }
+//the fatest method
+int trap(int* height, int heightSize) {
+    
+    int largest_l = 0, largest_r = 0, units = 0;
+    int i =0,j =0;
+    int *left = (int *)malloc(sizeof(int)*heightSize);
+    int *right = (int *)malloc(sizeof(int)*heightSize);
+    
+    if (height == NULL)
+        return 0;
+    
+    largest_l = height[0];
+    largest_r = height[heightSize-1];
+    for (i = 0,j = heightSize-1; i < heightSize; i++,j--)
+    {
+        largest_l = height[i] > largest_l? height[i] : largest_l;
+        left[i] = largest_l - height[i] < 0 ? 0 : largest_l - height[i];       
+        
+        largest_r = height[j] > largest_r? height[j] : largest_r;
+        right[j] = largest_r - height[j] < 0 ? 0 : largest_r - height[j];
+    }
+    
+    for (i = 0; i < heightSize; i++)
+    {
+        units += right[i] > left[i] ? left[i] : right[i];
+    }
+    return units;
+}
