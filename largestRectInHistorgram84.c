@@ -40,3 +40,32 @@ int largestRectangleArea(int* heights, int heightsSize) {
     }
     return ans;
 }
+//the fatest method
+int largestRectangleArea(int* heights, int heightsSize) {
+    if(!heightsSize) return 0;
+    int* rffew = (int*)malloc(heightsSize * sizeof(int));
+    int* lffew = (int*)malloc(heightsSize * sizeof(int));
+    rffew[heightsSize - 1] = heightsSize;
+    lffew[0] = -1;
+    int i, index, max = 0;
+    for(i = heightsSize - 2; i >= 0; i--){
+        if(heights[i] > heights[i + 1]) rffew[i] = i + 1;
+        else{
+            index = rffew[i + 1];
+            while(index < heightsSize && heights[index] >= heights[i]) index = rffew[index];
+            rffew[i] = index;
+        }
+    }
+    for(i = 1; i < heightsSize; i++){
+        if(heights[i] > heights[i - 1]) lffew[i] = i - 1;
+        else{
+            index = lffew[i - 1];
+            while(index >= 0 && heights[index] >= heights[i]) index = lffew[index];
+            lffew[i] = index;
+        }
+    }
+    for(i = 0; i < heightsSize; i++){
+        if(max < heights[i] * (rffew[i] - lffew[i] - 1)) max = heights[i] * (rffew[i] - lffew[i] - 1);
+    }
+    return max;
+}
