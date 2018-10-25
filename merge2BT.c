@@ -33,6 +33,8 @@ struct TreeNode* mergeTrees(struct TreeNode* t1, struct TreeNode* t2) {
     *child = false;
     if (t1 == NULL && t2 != NULL) {
         return t2;
+    } else if (t1!=NULL && t2 == NULL) {
+        return t1;
     }
     merge(t1, t2, child);
     return t1;
