@@ -37,6 +37,7 @@ public:
                 int a = A[i], b = A[j];
                 long long l = 2;
                 if ((res - 2)*b > A.back()) break;
+				//binary search
                 while (S.count(a + b))
                 {
                     b = a + b;
