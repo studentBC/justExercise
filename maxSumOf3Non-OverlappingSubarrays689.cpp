@@ -1,3 +1,4 @@
+//original method
 class Solution {
 public:
     void go (int start, int k, int sum, vector<int>& temp, vector<int>& accu,  vector<int>& ans, int& maxsum) {
@@ -46,6 +47,45 @@ public:
         vector<int>temp;
         vector<int>ans(3,-1);
         go (0 , k, 0, temp, accu, ans, maxsum);
+        return ans;
+    }
+};
+//my method which is generated after refer to below concept
+class Solution {
+public:
+    vector<int> maxSumOfThreeSubarrays(vector<int>& nums, int k) {
+        int sum = 0 , end = nums.size()-k+1 , left , right, lpos , rpos, maximum = 0;
+        vector<int>ans;
+        vector<int>accu(end,0);
+        for (int i = 0; i < k; i++) sum+=nums[i];
+        accu[0] = sum;
+        for (int i = 1; i < end; i++) {
+            accu[i] = accu[i-1]-nums[i-1]+nums[i+k-1];
+        }
+        end = nums.size()-2*k;
+        for (int i = k; i <= end; i++) {
+            left = right = 0;
+            for (int j = 0; j <= i-k; j++) {
+                if (accu[j] > left) {
+                    lpos = j;
+                    left = accu[j];
+                }
+            }
+            for (int j = i+k; j < accu.size(); j++) {
+                if (accu[j] > right) {
+                    right = accu[j];
+                    rpos = j;
+                }
+            }
+            sum = left+right+accu[i];
+            if (maximum < sum) {
+                ans.clear();
+                ans.emplace_back(lpos);
+                ans.emplace_back(i);
+                ans.emplace_back(rpos);
+                maximum = sum;
+            }
+        }
         return ans;
     }
 };
