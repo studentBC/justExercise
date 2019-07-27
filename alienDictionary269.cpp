@@ -41,6 +41,7 @@ You may assume that if a is a prefix of b, then a must appear before b in the gi
 If the order is invalid, return an empty string.
 There may be multiple valid order of letters, return any one of them is fine.
 */
+//my method beat 43.86%
 class Solution {
 public:
     void go (int index, vector<bool>& visited, vector<vector<int>>& graph, vector<char>& ans) {
