@@ -117,19 +117,6 @@ public:
 //4 ms solution
 class Solution {
 public:
-    // TIME EXCEEDING
-    /*
-    int primePalindrome(int N) {
-        for(int i = N; i<std::pow(10, 8); i++)
-        {
-            if(isPalimdromic(i))
-                if(isPrime(i)) 
-                        return i;
-        }
-        return -1;
-    }
-    */
-    
     int primePalindrome(int N) {
         if(N <= 2) return 2;
         if(N >= 8 && N <= 11) return 11; 
@@ -159,18 +146,10 @@ public:
             reversed = reversed*10 + i%10;
             i /=10;
         }
-        //std::string s = std::to_string(i);
-        //return std::equal(s.begin(), s.begin()+s.size()/2, s.rbegin());
         return reversed == tmp;
     }
     
     int getNextPalindrome(int x){
-        /*std::string s = to_string(x);
-        std::string t = s;
-        
-        s.pop_back();
-        std::reverse(t.begin(), t.end());
-        return stol(s+t);*/
         int output = x;
         output /= 10; // string(output).pop_back()
         while(x){
