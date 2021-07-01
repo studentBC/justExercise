@@ -64,3 +64,36 @@ public:
         
     }
 };
+//two pointer solution
+class Solution {
+public:
+    int limit;
+    int getcount (string s, int ut) {
+        vector<int>count(26, 0);
+        int i = 0, j = 0, uniq = 0, bk = 0, ans = 0, len = s.size(), index;
+        while (j < len) {
+                index = s[j]-'a';
+                if (count[index] == 0) uniq++; 
+                count[index]++;
+                if (count[index] == limit)  bk++; 
+                j++;
+                
+                while (uniq > ut) {
+                    index = s[i]-'a';
+                    if (count[index] == limit) bk--;
+                    count[index]--;
+                    if (count[index] == 0) uniq--;
+                    
+                    i++;
+                }
+                if (uniq == ut && uniq == bk) ans = max(ans, j-i);
+        }
+        return ans;
+    }
+    int longestSubstring(string s, int k) {
+        int ans = 0;
+        limit = k;
+        for (int i = 1; i <= 26; i++)   ans = max(ans, getcount(s, i));
+        return ans;
+    }
+};
