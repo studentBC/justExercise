@@ -18,3 +18,14 @@ int* countBits(int num, int* returnSize) {
 	}
 	return ans;
 }
+//91 ms solution
+class Solution {
+public:
+    vector<int> countBits(int n) {
+        vector<int>dp(n+1, 0);
+        for (int i = 1; i <= n; i++) {
+            dp[i] = dp[i>>1]+(i&1);
+        }
+        return dp;
+    }
+};
