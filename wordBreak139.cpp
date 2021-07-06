@@ -80,3 +80,22 @@ public:
         return dp.back();
     }
 };
+//practice it again man
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        int len = s.size(), length, start;
+        vector<bool>dp(len+1, false);
+        dp[0] = true;
+        for (int i = 1; i <= len; i++) {
+            for (string str: wordDict) {
+                length = str.size();
+                start = i- length;
+                if (start >= 0 && dp[start] && s.substr(start, length) == str) {
+                    dp[i] = true; break;
+                }
+            }
+        }
+        return dp.back();
+    }
+};
