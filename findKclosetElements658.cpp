@@ -63,3 +63,29 @@ public:
         return vector<int>(arr.begin() + start, arr.begin() + start + k);
     }
 };
+// the fatest solution
+class Solution {
+public:
+    vector<int> findClosestElements(vector<int>& arr, int k, int x) {
+        std::ios::sync_with_stdio(false); 
+        std::cin.tie(nullptr);
+        std::deque<int> closest;
+        int n = arr.size();
+        for (int i = 0; i < n; i++){
+            //cout<<i<<endl;
+            if (i < k) {
+                closest.push_back(arr[i]);
+            }
+            else {
+                if (abs(closest.front() - x) > abs(arr[i] - x)) {
+                    closest.pop_front();
+                    closest.push_back(arr[i]);
+                }
+                else if (arr[i] != closest.front()) {
+                    break;
+                }
+            }
+        }
+        return std::vector<int>({closest.begin(), closest.end()});
+    }
+};
