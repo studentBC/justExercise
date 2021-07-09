@@ -38,7 +38,8 @@ public:
 		p+=(to_string(i-pi)+","+to_string(j-pj));
         for (int a = 0; a < 4; a++) {
             go (i+step[a], j+step[a+1], i, j, grid, p);
-        }   
+        }
+		p+="*";
     }
     int numberofDistinctIslands(vector<vector<int>> &grid) {
         int ans = 0;
