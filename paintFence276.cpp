@@ -106,3 +106,17 @@ public:
         return same + diff;
     }
 };
+//my solution beat 90%
+class Solution {
+public:
+    int numWays(int n, int k) {
+        if (n == 1) return k;
+        int ans = 0, same = k, different = k*(k-1), s;
+        for (int i = 2; i < n; i++) {
+            s = same;
+            same = different;
+            different = s*(k-1)+different*(k-1);
+        }
+        return same+different;
+    }
+};
