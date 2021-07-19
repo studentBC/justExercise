@@ -74,3 +74,22 @@ int trap(int* height, int heightSize) {
     }
     return units;
 }
+//my dp solutin
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int len = height.size(), ans = 0, h;
+        if (len == 0) return 0;
+        vector<int>lm(len, 0), rm(len, 0);
+        lm[0] = height[0];
+        rm.back() = height.back();
+        for (int i = 1; i < len; i++) lm[i] = max(lm[i-1], height[i]);
+        len--;
+        for (int i = len-1; i > -1; i--) rm[i] = max(rm[i+1], height[i]);
+        for (int i = 1; i < len; i++) {
+            h=min(lm[i-1], min(lm[i+1], rm[i+1]));
+            if (h > height[i]) ans+=(h-height[i]);
+        }
+        return ans;
+    }
+};
