@@ -74,3 +74,20 @@ public:
         return res;
     }
 };
+//beat 88.3 with others concept
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& nums) {
+        int len = nums.size();
+        vector<int>ans(len, -1), s;
+        int length = len << 1;
+        for (int i = 0; i < length; i++) {
+            while (!s.empty() && nums[i%len] > nums[s.back()]) {
+                ans[s.back()] = nums[i%len];
+                s.pop_back();
+            }
+            s.push_back(i%len);
+        }
+        return ans;
+    }
+};
