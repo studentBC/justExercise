@@ -98,3 +98,44 @@ public:
         return dp[1];
     }
 };
+//my bfs solution beat 6%
+class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        unordered_map<string, unordered_set<string>>graph;
+        wordList.push_back(beginWord);
+        int len = wordList.size(), count, ans = INT_MAX;
+        
+        for (int i = 0; i < len; i++) {
+            for (int j = i+1; j < len; j++) {
+                if (wordList[i].size() == wordList[j].size()) {
+                    count = 0;
+                    for (int k = 0; k < wordList[i].size(); k++) {
+                        if (wordList[i][k] != wordList[j][k]) count++;
+                    }
+                    if (count == 1) {
+                        graph[wordList[i]].insert(wordList[j]);
+                        graph[wordList[j]].insert(wordList[i]);
+                    }
+                }
+            }
+        }
+        queue<pair<string, int>>pos;
+        unordered_set<string>visited;
+        pos.push({beginWord, 1});
+        while (!pos.empty()) {
+            pair<string, int> next = pos.front();
+            //cout << next.first << " , ";
+            pos.pop();
+            if (next.first == endWord) ans = min(ans, next.second);
+            count = next.second+1;
+            for (string s : graph[next.first]) {
+                if (visited.find(s) == visited.end()) {
+                    pos.push({s, count});
+                    visited.insert(s);
+                }
+            }
+        }
+        return ans == INT_MAX?0:ans;
+    }
+};
