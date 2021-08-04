@@ -178,3 +178,29 @@ public:
  }
         
 };
+//traditional dp solution
+//
+//dp[i][j] denotes whether s[0....i-1] matches p[0.....j-1],
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int slen = s.size(), plen = p.size();
+        vector<vector<bool>>dp(slen+1, vector<bool>(plen+1, false));
+        dp[0][0] = true;
+        for (int i = 0; i < plen; i++) {
+            if (p[i] == '*') dp[0][i+1] = true; 
+            else break;
+        }
+        //cout <<"here";
+        for (int i = 0; i < slen; i++) {
+            for (int j = 0; j < plen; j++) {
+                if (p[j] != '*') {
+                    dp[i+1][j+1] = dp[i][j] & (p[j] == '?' | s[i] == p[j]);
+                } else {
+                    dp[i+1][j+1] = dp[i][j+1] | dp[i+1][j];
+                }
+            }
+        }
+        return dp.back().back();
+    }
+};
