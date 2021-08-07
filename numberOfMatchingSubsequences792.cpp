@@ -94,3 +94,17 @@ public:
         return matching_subsequences;
     }
 };
+//beat 95%
+class Solution {
+public:
+    int numMatchingSubseq(string s, vector<string>& words) {
+        vector<const char*> waiting[128];
+		for (string& s : words) waiting[s[0]].push_back(s.c_str());
+        for (char c : s) {
+			vector<const char*> next = waiting[c];
+			waiting[c].clear();
+			for (const char* ss : next) waiting[*++ss].push_back(ss);
+        }
+        return waiting[0].size();
+    }
+};
