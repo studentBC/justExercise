@@ -30,4 +30,38 @@ public:
         return dp[s.size()-1];
     }
 };
-
+//my fatest solution
+class Solution {
+public:
+    
+    int numDecodings(string s) {
+        if (s[0] == '0') return 0;
+        int len = s.size(), prev = -1;
+        vector<int>num, dp{1};
+        for (char c : s) {
+            num.push_back(c-'0');
+            if (prev == 0 && prev == num.back()) return 0;
+            prev = num.back();
+        }
+        //cout << start << endl;
+        for (int i = 1; i < len; i++) {
+            if (num[i] == 0) {
+                if (i < 2) {
+                    if (num[i-1] < 3) dp.push_back(1);
+                    else dp.push_back(0);
+                } else {
+                    if (num[i-1]*10 < 27) dp.push_back(dp[i-2]);
+                    else dp.push_back(0);
+                }
+            } else {
+                if (num[i-1] == 0) {
+                    dp.push_back(dp.back());
+                } else if (num[i-1]*10+num[i] < 27) {
+                    if (i > 1) dp.push_back(dp.back()+dp[i-2]);
+                    else dp.push_back(dp.back()+1);
+                } else dp.push_back(dp.back());
+            } 
+        }
+        return dp.back();
+    }
+};
