@@ -1,5 +1,36 @@
 // https://leetcode.com/problems/strings-differ-by-one-character/discuss/802871/Rabin-Karp-O(nm)
+/*
+Given a list of strings dict where all the strings are of the same length.
 
+Return true if there are 2 strings that only differ by 1 character in the same index, otherwise return false.
+
+ 
+
+Example 1:
+
+Input: dict = ["abcd","acbd", "aacd"]
+Output: true
+Explanation: Strings "abcd" and "aacd" differ only by one character in the index 1.
+Example 2:
+
+Input: dict = ["ab","cd","yz"]
+Output: false
+Example 3:
+
+Input: dict = ["abcd","cccc","abyd","abab"]
+Output: true
+ 
+
+Constraints:
+
+The number of characters in dict <= 105
+dict[i].length == dict[j].length
+dict[i] should be unique.
+dict[i] contains only lowercase English letters.
+ 
+
+Follow up: Could you solve this problem in O(n * m) where n is the length of dict and m is the length of each string.
+*/
 /*
 1. Compute a hash for each string i in [0, n) as hash[i] = a[0] * 26 ^ (m - 1) + a[1] * 26 ^ (m - 2) + ... + a[m - 2] * 26 + a[m - 1]
 
@@ -32,48 +63,20 @@ public:
         return false;
     }
 };
-
-
+//MLE now
 class Solution {
 public:
-  bool differByOne(vector<string>& A) {
-    const int n = A.size();
-    if (n <= 1) return false;
-    int L = A[0].length();
-    for (int j = 0; j < L; ++j) {
-
-      sort(A.begin(), A.end(), [j,L](const auto& lhs, const auto& rhs){
-        for (int i = j; i < L; ++i) {
-          if (lhs[i] < rhs[i]) {
-            return true;
-          }
-          if (lhs[i] > rhs[i]) {
-            return false;
-          }
+    bool differByOne(vector<string>& dict) {
+        unordered_map<string, bool>dic;
+        int len = dict.back().size();
+        for (string& s: dict) {
+            for (int j = 0; j < len; j++) {
+                string temp = s;
+                temp[j] = '*';
+                if (dic.count(temp)) return true;
+                else dic[temp] = true;
+            }
         }
-        for (int i = 0; i < j; ++i) {
-          if (lhs[i] < rhs[i]) {
-            return true;
-          }
-          if (lhs[i] > rhs[i]) {
-            return false;
-          }
-        }
-        return true;
-      });
-
-      for (int i = 1; i < n; ++i) {
-        const string& p = A[i-1];
-        const string& s = A[i];
-        int numDiff = 0;
-        for (int j = 0; j < L; ++j) {
-          if (p[j] == s[j]) continue;
-          if (++numDiff > 1) break;
-        }
-        if (numDiff == 1) return true;
-      }
+        return false;
     }
-
-    return false;
-  }
 };
