@@ -137,3 +137,46 @@ public:
     }
 };
 
+//2022/8/20 beat 87%
+/*
+// Definition for an Interval.
+class Interval {
+public:
+    int start;
+    int end;
+
+    Interval() {}
+
+    Interval(int _start, int _end) {
+        start = _start;
+        end = _end;
+    }
+};
+*/
+
+class Solution {
+public:
+    static bool compare (Interval& a, Interval& b) {
+        if (a.start == b.start) return a.end < b.end;
+        return a.start < b.start;
+    }
+    vector<Interval> employeeFreeTime(vector<vector<Interval>> s) {
+        vector<Interval>schedule;
+        for (int i = 0; i < s.size(); i++) {
+            for (int j = 0; j < s[i].size(); j++) schedule.push_back(s[i][j]);
+        }
+        sort(schedule.begin(), schedule.end(), compare);
+        Interval cur = schedule[0];
+        vector<Interval>ans;
+        for (int i = 1; i < schedule.size(); i++) {
+            if (cur.end <= schedule[i].start || cur.start >= schedule[i].end) {
+                if (cur.end < schedule[i].start) ans.push_back(Interval{cur.end, schedule[i].start});
+                cur = schedule[i];
+            } else {
+                cur.start = min(cur.start, schedule[i].start);
+                cur.end = max(cur.end, schedule[i].end);
+            }
+        }
+        return ans;
+    }
+};
