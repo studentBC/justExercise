@@ -128,3 +128,35 @@ public:
         return ans;
     }
 };
+//2022/8/21
+//https://leetcode.com/problems/maximum-number-of-points-with-cost/discuss/1344908/C%2B%2BJavaPython-3-DP-Explanation-with-pictures-O(MN)-Time-O(N)-Space
+
+class Solution {
+public:
+    long long maxPoints(vector<vector<int>>& points) {
+        int row = points.size(), col = points[0].size(), dist;
+        long long ans = 0;
+        vector<long long>cur(col, 0), left(col, 0), right(col, 0), prev(col, 0);
+        for (int i = 0; i < col; i++) {
+            prev[i] = points[0][i];
+            ans = max(prev[i], ans);
+        }
+        row--;
+        for (int i = 0; i < row; i++) {
+            left[0] = prev[0];
+            right.back() = prev.back();
+            for (int j = 1; j < col; j++) {
+                left[j] = max(prev[j], left[j-1]-1);
+            }
+            for (int j = col-2; j > -1; j--) {
+                right[j] = max(prev[j], right[j+1]-1);
+            }
+            for (int j = 0; j < col; j++) {
+                cur[j] = points[i+1][j] + max(left[j], right[j]);
+            }
+            prev = cur;
+        }
+        for (long long i : cur) ans = max(ans, i);
+        return ans;
+    }
+};
