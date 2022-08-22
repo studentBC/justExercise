@@ -84,3 +84,67 @@ public:
         }
     }
 };
+//2022/8/21
+/**
+ * // This is the Master's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * class Master {
+ *   public:
+ *     int guess(string word);
+ * };
+ */
+class Solution {
+public:
+    int freq[6][26] = {};
+    int similarity(string_view s1, string_view s2) {
+        int count = 0;
+        for(int i = 0; i < 6; ++i) {
+            if(s1[i]==s2[i]) ++count;
+        }
+        return count;
+    }
+    set<string_view> filter_out(string_view word, int count, const set<string_view>& avail) {
+        set<string_view> avail_next;
+        for(const auto& s : avail) {
+            if(similarity(word, s) == count) {
+                avail_next.emplace(s);
+            }
+        }
+        return avail_next;
+    }
+   //interesting solution it choose the most frequent character as next candidate to elimiate most other or get the right target 
+    string_view choose(const set<string_view>& avail) {
+        string_view choice;
+        int max_score = 0;
+        for(const auto& s : avail) {
+            int score = 0;
+            for(int i = 0; i < 6; ++i) {
+                score += freq[i][s[i]-'a'];
+            }
+            if(score > max_score) {
+                choice = s;
+                max_score = score;
+            }
+        }
+        return choice;
+    }
+    
+    void findSecretWord(vector<string>& wordlist, Master& master) {
+        set<string_view> avail;
+        for(const auto& word : wordlist) {
+            avail.emplace(word);
+            for(int i = 0; i < 6; ++i) {
+                freq[i][word[i]-'a']++;
+            }
+        }
+        
+        while(true) {
+            auto sv = choose(avail);
+            auto guess = string(sv.begin(), sv.end());
+            auto count = master.guess(guess);
+            if(count == 6) break;
+            avail.erase(sv);
+            avail = filter_out(guess, count, avail);
+        }
+    }
+};
