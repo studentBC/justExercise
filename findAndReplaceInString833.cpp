@@ -83,3 +83,45 @@ public:
         return S;
     }
 };
+//my beat 44% solution
+class Solution {
+public:
+    string findReplaceString(string s, vector<int>& indices, vector<string>& sources, vector<string>& targets) {
+        vector<string>ans;
+        vector<int>len;
+        int length;
+        string answer;
+        vector<int>temp;
+        map<int, pair<string, string>>ss;
+        for (int i = 0; i < indices.size(); i++) {
+            ss[indices[i]] = {sources[i], targets[i]};
+        }
+        // for (int i = 0; i < 3; i++) {
+        //     cout << temp[i] <<" : " << sources[i] <<" , " << targets[i]<<endl;
+        //     //indices[i] = temp[i];
+        // }
+        for (auto& it : ss) {
+            length = (int)it.second.first.size();
+            string target = s.substr (it.first, length);
+            if (it.second.first == target) {
+                ans.push_back(it.second.second);
+                len.push_back(length);
+                for (int j = it.first, k = 0; k < len.back(); j++, k++) {
+                    s[j] = '$';
+                }
+            }
+        }
+        int i = 0, end = s.size(), j = 0;
+        while (i < end) {
+            if (s[i] != '$') {
+                answer.push_back(s[i]);
+                i++;
+            } else {
+                answer+=ans[j];
+                i+=len[j];
+                j++;
+            }
+        }
+        return answer;
+    }
+};
