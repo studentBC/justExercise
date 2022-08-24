@@ -1,3 +1,31 @@
+/*
+ the concept is that we can take off A frist to form a dp pattern by using only P and L
+ we can find out that it will be legal for P ending, however, for L ending we need to eliminate LLLL situation
+ (n-2) P => LPP, PPP, PLP, LLP : dp[i-1]
+ (n-2) L => LLL, PLL, PPL, LPL => since LLL is illegal and the char before the first L must be P => PLLL : dp[i-1]-dp[i-4] 
+ Hence, we have dp[i-1] + dp[i-1] - dp[i-4]
+ After that we can put A into consideration, since A can be put into the any location of 0-length, it can generate (i-1) * (n-i) answer
+ so we only need to add all of the i in every position of string and the case without A (dp[n]) and that will be the final answer
+ */
+class Solution {
+public:
+    int mod = 1e9+7;
+    int checkRecord(int n) {
+        int len = max(n+1, 6);
+        vector<long long>dp(len, 0);
+        long sum = 0;
+        dp[0] = 1; dp[1] = 2; dp[2] = 4; dp[3] = 7;
+        for (int i = 4; i <= n; i++) {
+            dp[i] = ((2*dp[i-1])%mod + (mod - dp[i-4]))%mod;
+        }
+        sum = dp[n];
+        for (int i = 1; i <= n; i++) {
+            sum+= (dp[i-1]*dp[n-i])%mod;
+        }
+        return sum%mod;
+    } 
+};
+
 class Solution {
 public:
     int checkRecord(int n) {
