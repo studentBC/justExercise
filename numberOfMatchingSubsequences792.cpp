@@ -1,3 +1,47 @@
+/*
+Intuition
+
+Since the length of S is large, let's think about ways to iterate through S only once, instead of many times as in the brute force solution.
+
+We can put words into buckets by starting character. If for example we have words = ['dog', 'cat', 'cop'], then we can group them 'c' : ('cat', 'cop'), 'd' : ('dog',). This groups words by what letter they are currently waiting for. Then, while iterating through letters of S, we will move our words through different buckets.
+
+For example, if we have a string like S = 'dcaog':
+
+heads = 'c' : ('cat', 'cop'), 'd' : ('dog',) at beginning;
+heads = 'c' : ('cat', 'cop'), 'o' : ('og',) after S[0] = 'd';
+heads = 'a' : ('at',), 'o' : ('og', 'op') after S[0] = 'c';
+heads = 'o' : ('og', 'op'), 't': ('t',) after S[0] = 'a';
+heads = 'g' : ('g',), 'p': ('p',), 't': ('t',) after S[0] = 'o';
+heads = 'p': ('p',), 't': ('t',) after S[0] = 'g';
+Algorithm
+
+Instead of a dictionary, we'll use an array heads of length 26, one entry for each letter of the alphabet. For each letter in S, we'll take all the words waiting for that letter, and have them wait for the next letter in that word. If we use the last letter of some word, it adds 1 to the answer.
+*/
+class Solution {
+public:
+    struct node {
+        string word;
+        int index;
+        node(string w, int i): word(w), index(i) {};
+    };
+    int numMatchingSubseq(string s, vector<string>& words) {
+        int ans = 0;
+        vector<vector<node>> head(26);
+        for (string& ss: words) {
+            head[ss[0]-'a'].push_back(node(ss, 0));
+        }
+        for (char c : s) {
+            vector<node>temp = head[c-'a'];
+            head[c-'a'].clear();
+            for (node n : temp) {
+                n.index++;
+                if (n.index == n.word.size()) ans++;
+                else head[n.word[n.index]-'a'].push_back(n);
+            }
+        }
+        return ans;
+    }
+};
 //my solution which cant find bug ... f***
 //i think bug might be use string find .... it might have substring of substring which will misleading us
 class Solution {
