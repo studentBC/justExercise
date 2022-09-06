@@ -80,3 +80,34 @@ public:
         return count;
     }
 };
+//my solution on 2022 beats 90%
+class Solution {
+public:
+    int numSplits(string s) {
+        unordered_set<char>l, r;
+        int len = s.size(), mid, count = 0;
+        vector<int>left(len), right(len);
+        for (int i = 0; i < len; i++) {
+            l.insert(s[i]);
+            left[i] = l.size();
+        }
+        //if (left.back()%2) return 0;
+        mid = left.back()/2;
+        for (int i = len-1; i > -1; i--) {
+            r.insert(s[i]);
+            right[i] = r.size();
+        }
+        len--;
+        // for (int i = 0; i <= len; i++) {
+        //     cout << left[i] <<", ";
+        // }
+        // cout << endl;
+        // for (int i = 0; i <= len; i++) {
+        //     cout << right[i] <<", ";
+        // }
+        for (int i = 0; i < len; i++) {
+            if (left[i] == right[i+1]) count++;
+        }
+        return count;
+    }
+};
