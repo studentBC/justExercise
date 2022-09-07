@@ -1,6 +1,43 @@
 class Solution {
 public:
     vector<string> findAllRecipes(vector<string>& recipes, vector<vector<string>>& ingredients, vector<string>& supplies) {
+        unordered_set<string>sup(supplies.begin(), supplies.end());
+        unordered_map<string, unordered_set<string>> graph;
+        unordered_map<string, int>count;
+        queue<string>next;
+        vector<string>ans;
+        //for (string& s : supplies) next.push()
+        for (int i = 0; i < recipes.size(); i++) {
+            for (int j = 0; j < ingredients[i].size(); j++) {
+                if (sup.count(ingredients[i][j])) continue;
+                else {
+                    count[recipes[i]]++;
+                    graph[ingredients[i][j]].insert(recipes[i]);
+                }
+            }
+            if (!count.count(recipes[i])) {
+                next.push(recipes[i]);
+                ans.push_back(recipes[i]);
+            }
+        }
+        while (!next.empty()) {
+            for (string s : graph[next.front()]) {
+                count[s]--;
+                if (count[s] == 0) {
+                    next.push(s);
+                    count.erase(s);
+                    ans.push_back(s);
+                }
+            }
+            next.pop();
+        }
+        return ans;
+    }
+};
+
+class Solution {
+public:
+    vector<string> findAllRecipes(vector<string>& recipes, vector<vector<string>>& ingredients, vector<string>& supplies) {
         unordered_map<string, vector<string>>graph;
         unordered_map<string, int> indegree;
         unordered_set<string>sup(supplies.begin(), supplies.end());
