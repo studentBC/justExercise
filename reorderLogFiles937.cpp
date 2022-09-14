@@ -1,3 +1,42 @@
+//2022 9 14 beat 93%
+class Solution {
+public:
+    vector<string> reorderLogFiles(vector<string>& logs) {
+        vector<int> digit;
+        vector<pair<string, int>>letter;
+        int i = 0;
+        for (string& s: logs) {
+            istringstream iss(s);
+            string last, tmp, ss;
+            iss>>last;
+            iss>>tmp;
+            if (isdigit(tmp[0])) {
+                digit.push_back(i);
+            } else {
+                ss = tmp+" ";
+                while (iss>>tmp) {
+                    ss+=tmp;
+                    ss+=" ";
+                }
+                ss+=" ";
+                ss+=last;
+                //cout << ss << endl;
+                letter.push_back({ss, i});
+            }
+            i++;
+        }
+        sort(letter.begin(), letter.end());
+        vector<string>ans;
+        for (int i = 0; i < letter.size(); i++) {
+            ans.push_back(logs[letter[i].second]);
+        }
+        for (int i : digit) {
+            ans.push_back(logs[i]);
+        }
+        return ans;
+    }
+};
+
 class Solution {
 public:
     static bool compare (tuple<string, string, int>& a, tuple<string, string, int>& b) {
