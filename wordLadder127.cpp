@@ -1,51 +1,42 @@
+//https://leetcode.com/problems/word-ladder/discuss/40707/C%2B%2B-BFS
 class Solution {
 public:
-    int getDiff (string a, string b) {
-        int count = 0;
-        if (a.compare(b) == 0)return 0;
-        for (int i = 0; i < a.size(); i++) {     
-            if (a[i] != b[i]) {
-                count++;
-            }
-        }
-        return count;
-    }
     int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        wordList.insert(wordList.begin(),beginWord);
-        vector<vector<int>>road (wordList.size(),vector<int>(wordList.size()));
-        queue<int>step , next;
-        for (int i = 0; i < wordList.size(); i++) {
-            for (int j = 0; j < wordList.size(); j++) {
-                road[i][j] = getDiff(wordList[i],wordList[j]);
-                //cout <<road[i][j] << " , ";
-            }
-            //cout << endl;
+        unordered_set<string> dict(wordList.begin(), wordList.end());
+        if (!dict.count(endWord)) {
+            return 0;
         }
-        int ans = INT_MAX;
-        vector<bool>been(wordList.size(),false);
-        step.push(0);
-        next.push(0);
-        while (!step.empty() && step.front() <= wordList.size() && ans==INT_MAX) {
-            //cout << "at: " << next.front() <<"  step: " << step.front() << endl;
-            been[next.front()] = true;
-            //cout << "at: " << next.front() <<"  step: " << step.front() << endl;
-            if (wordList[next.front()].compare(endWord) == 0) {
-                if (ans > step.front()+1) ans = step.front()+1;
-                for (int i = 1; i < been.size(); i++)been[i] = false;
-            } else {
-                for (int i = 0; i < road.size(); i++) {
-                    if (road[next.front()][i] == 1 && !been[i]) {
-                        next.push(i);
-                        step.push(step.front()+1);
-                        //cout << "next: " << i << " step: " <<  step.front()+1 << endl;
+        vector<string> words;
+        unordered_set<string> lookup{endWord};
+        words.emplace_back(beginWord);
+        int res = 1;
+        while (!words.empty()) {
+            for (const auto & w : words) {
+                dict.erase(w);
+            }
+            unordered_set<string> tmp;
+            ++res;
+            for (auto & w : words) {                                
+                for (auto & ch : w) {
+                    char cur = ch;
+                    for (char c = 'a'; c <= 'z'; ++c) {
+                        ch = c;
+                        if (lookup.count(w)) {
+                            return res;                            
+                        }
+                        if (dict.count(w)) {
+                            tmp.emplace(w);
+                        }
                     }
+                    ch = cur;
                 }
             }
-            step.pop();
-            next.pop();
+            if (tmp.size() > lookup.size()) {
+                swap(tmp, lookup);
+            }
+            words.assign(tmp.begin(), tmp.end());
         }
-        if (ans == INT_MAX)return 0;
-        return ans;
+        return 0;
     }
 };
 //the fatest method
