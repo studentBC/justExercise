@@ -1,3 +1,35 @@
+//20220920
+class Solution {
+public:
+    string intToRoman(int num) {
+        unordered_map<int, string>roman{
+            {1, "I"}, {5, "V"}, {10, "X"}, {50, "L"}, {100, "C"}, {500, "D"}, {1000, "M"},
+            {4, "IV"}, {9, "IX"}, {40, "XL"}, {90, "XC"}, {400, "CD"}, {900, "CM"}
+        };
+        int d, count = 1, mid;
+        string ans;
+        while (num) {
+            d = num%10;
+            d*=count;
+            if (roman.count(d)) ans.insert(0, roman[d]);
+            else {
+                mid = 5*count;
+                string temp;
+                if (d > mid) {
+                    d-=mid;   
+                    temp+=roman[mid];
+                }
+                for (int i = count; i <= d; i+=count) {
+                    temp+=roman[count];
+                }
+                ans.insert(0, temp);
+            }
+            count*=10;
+            num/=10;
+        }
+        return ans;
+    }
+};
 class Solution {
 public:
     string intToRoman(int num) {
