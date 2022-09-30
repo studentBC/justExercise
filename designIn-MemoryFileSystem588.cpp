@@ -35,6 +35,104 @@ You can assume all file or directory paths are absolute paths which begin with /
 You can assume that all operations will be passed valid parameters and users will not attempt to retrieve file content or list a directory or file that does not exist.
 You can assume that all directory names and file names only contain lower-case letters, and same names won't exist in the same directory.
 */
+//my solution wrote in 2022/9/29
+class fn {
+    public:
+        string name;
+        fn (string fna):name(fna){}
+        unordered_map<string, string>file;
+        unordered_map<string, fn*>dir;      
+};
+class FileSystem {
+public:
+    vector<string>getPath(string s) {
+        vector<string>paths;
+        if (s.size() > 1) s+="/";
+        string token, delimiter = "/";
+        int pos;
+        while ((pos = s.find(delimiter)) != std::string::npos) {
+            token = s.substr(0, pos);
+            //cout << token <<", ";
+            paths.push_back(token);
+            
+            s.erase(0, pos + delimiter.length());
+        }
+        return paths;
+    }
+    fn* root = new fn("root");
+    FileSystem() {
+        
+    }
+    
+    vector<string> ls(string path) {
+        fn* ptr = root;
+        vector<string>paths = getPath(path);
+        
+        for (int i = 0; i < paths.size(); i++) {
+            if (ptr->dir.count(paths[i])) ptr = ptr->dir[paths[i]];
+            else {
+                if (paths[i].size() == 0) return {};
+                return {paths[i]};
+            }
+        }
+        vector<string>ans;
+        for (auto& it: ptr->dir) ans.push_back(it.first);
+        for (auto& it: ptr->file) ans.push_back(it.first);
+        sort(ans.begin(), ans.end());
+        return ans;
+    }
+    
+    void mkdir(string path) {
+        fn* ptr = root;
+        vector<string>paths = getPath(path);
+        
+        for (int i = 0; i < paths.size(); i++) {
+            //cout << paths[i] <<", ";
+            if (!ptr->dir.count(paths[i])) {
+                ptr->dir[paths[i]] =  new fn(paths[i]);
+            }
+            ptr = ptr->dir[paths[i]];
+        }
+    }
+    
+    void addContentToFile(string filePath, string content) {
+        fn* ptr = root;
+        vector<string>paths = getPath(filePath);
+        int len = paths.size()-1;
+        for (int i = 0; i < len; i++) {
+            if (!ptr->dir.count(paths[i])) {
+                ptr->dir[paths[i]] =  new fn(paths[i]);
+            }
+            ptr = ptr->dir[paths[i]];
+        }
+        if (ptr->file.count(paths.back())) {
+            ptr->file[paths.back()] += content;
+        } else ptr->file[paths.back()] = content;
+    }
+    
+    string readContentFromFile(string filePath) {
+        fn* ptr = root;
+        vector<string>paths = getPath(filePath);
+        int len = paths.size()-1;
+        for (int i = 0; i < len; i++) {
+            if (!ptr->dir.count(paths[i])) return "";
+            ptr = ptr->dir[paths[i]];
+        }
+        return ptr->file[paths.back()];
+    }
+};
+
+/**
+ * Your FileSystem object will be instantiated and called as such:
+ * FileSystem* obj = new FileSystem();
+ * vector<string> param_1 = obj->ls(path);
+ * obj->mkdir(path);
+ * obj->addContentToFile(filePath,content);
+ * string param_4 = obj->readContentFromFile(filePath);
+ */
+
+
+
 class FileSystem {
     class fs {
         public:
