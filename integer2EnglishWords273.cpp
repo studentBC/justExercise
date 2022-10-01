@@ -1,5 +1,78 @@
 class Solution {
 public:
+    vector<pair<int , string>> tens = { {90, "Ninety"}, {80, "Eighty"},{70, "Seventy"},
+        {60, "Sixty"},{50, "Fifty"},{40, "Forty"},{30, "Thirty"},{20, "Twenty"},{10, "-"}};
+    
+    vector<pair<int , string>> underTwenty = {{19, "Nineteen"},{18, "Eighteen"},{17, "Seventeen"},
+        {16, "Sixteen"},{15, "Fifteen"},{14, "Fourteen"},{13, "Thirteen"},{12, "Twelve"},{11, "Eleven"},
+        {10, "Ten"},{9, "Nine"},{8, "Eight"},{7, "Seven"},{6, "Six"},{5, "Five"},{4, "Four"},{3, "Three"},
+        {2, "Two"},{1, "One"}};
+    
+    string numberToWords(int num) {
+        string numStr = "";
+
+        if (num == 0)
+            return "Zero";
+        
+        // for number greater than billion
+        if (num >= 1000000000) {
+            numStr.append(numberToWords(num / 1000000000) + " Billion");
+            num = num % 1000000000;
+            
+            if (num > 0) {
+                numStr.append(" ");
+            }
+        }
+        
+        // for number greater than million
+        if (num >= 1000000) {
+            numStr.append(numberToWords(num / 1000000) + " Million");
+            num = num % 1000000;
+            
+            if (num > 0) {
+                numStr.append(" ");
+            }
+        }
+
+        // For numbers greater than thousand
+        if (num >= 1000) {
+            numStr.append(numberToWords(num / 1000) + " Thousand");
+            num = num % 1000;
+            
+            if (num > 0) {
+                numStr.append(" ");
+            }
+        }
+
+        // For numbers greater than hundred
+        if (num >= 100) {
+            numStr.append(numberToWords(num / 100) + " Hundred");
+            num = num % 100;
+            
+            if (num > 0) {
+                numStr.append(" ");
+            }
+        }
+
+        // For appending from tens position
+        if ((num / 10) > 1) {
+            numStr.append(tens[tens.size() - num / 10].second);
+            num = num % 10;
+            
+            if (num > 0) {
+                numStr.append(" ");
+            }
+        }
+
+        if (num > 0)
+            numStr.append(underTwenty[underTwenty.size() - num].second);
+
+        return numStr;
+    }
+};
+
+class Solution {
+public:
     string numberToWords(int num) {
         if (num == 0) return "Zero";
         vector<int>number;
