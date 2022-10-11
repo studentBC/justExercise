@@ -1,3 +1,26 @@
+//my solution at 2022/10/11
+class Solution {
+public:
+    int minEatingSpeed(vector<int>& piles, int h) {
+        sort(piles.begin(), piles.end());
+        int ans = INT_MAX, left = 1, right = piles.back(), mid, s = 0;
+        while (left <= right) {
+            mid = (left+right)/2;
+            s = 0;
+            for (int i : piles) {
+                s+=i/mid;
+                if (i%mid) s++;
+                if (s > h) break;
+            }
+            if (s <= h) {
+                right = mid-1;
+            } else {
+                left = mid+1;
+            }
+        }
+        return left;
+    }
+};
 class Solution {
 public:
     int check (vector<int>& piles, int mid) {
