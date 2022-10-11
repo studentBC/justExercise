@@ -1,3 +1,22 @@
+//my solution at 2022/10/10
+typedef pair<int, int> pi;
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        int len = temperatures.size();
+        vector<int>ans(len, 0);
+        priority_queue<pi, vector<pi>, greater<pi> > pq;
+        for (int i = 0; i < len; i++) {
+            while (!pq.empty() && pq.top().first < temperatures[i]) {
+                ans[pq.top().second] = i-pq.top().second;
+                pq.pop();
+            }
+            pq.push({temperatures[i], i});
+        }
+        return ans;
+    }
+};
+
 class Solution {
 public:
     vector<int> dailyTemperatures(vector<int>& T) {
