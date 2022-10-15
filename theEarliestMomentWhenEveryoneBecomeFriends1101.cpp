@@ -143,7 +143,62 @@ public:
         return -1;
     }
 };
+/*
+To visualize the final relationships, we draw the following graph, where each node represents an individual and the link between nodes represents the friendship relationship between two individuals. In addition, the label on top of the link indicates the moment when two individuals become friends.
 
+graph
+
+As one can see, at the timestamp 4, eventually everyone gets to know each other. Note that, the connections of 3 and 5 do not contribute to the overall connections among the friends. They are redundant connections, as we discussed before. To highlight them, we mark the connections with a dashed line.
+
+Now, given the above example, we show step by step how our Union-Find algorithm works.
+
+Initially, we have four groups, where each individual is a group itself. We use a directed link to point to the group that an individual belongs to. We show them in the following graph.
+graph
+
+Starting from the first event (1, A, B), we merge the groups of A and B together with the union(A, B) function. By merging, we assign the group of either A or B to the other one. As a result, the merged group (A, B) contains two elements. The total number of groups is now reduced to three.
+graph
+
+With the event (2, B, C), we then merge the group of (A, B) with the group of (C) together. To optimize the merging operations, we merge a smaller group (i.e. the one with smaller rank value) into a larger group. Therefore, we merge the group of (C) into the group of (A, B). The total number of groups is now reduced to two. Note: The keen observer will notice that C should actually point to A because of the effects of union by rank, but the main point here is that C has now joined the group with A and B. For simplicity, we will point C to B.
+graph
+
+With the event (3, A, C), as it turns out, the individuals A and C already belong to the same group. Therefore, no merging operation is needed. The landscape of groups remains the same.
+graph
+
+Finally with the event (4, C, D), we merge the group of (D) into the group of (A, B, C). The total number of groups is reduced to one. And this is the earliest moment when everyone becomes friends.
+graph
+
+Complexity Analysis
+
+Since we applied the Union-Find data structure in our algorithm, we would like to start with a statement on the time complexity of the data structure, as follows:
+
+Statement: If MM operations, either Union or Find, are applied to NN elements, the total run time is O(M \cdot \alpha(N))O(M⋅α(N)), where \alpha (N)α(N) is the Inverse Ackermann Function.
+
+One can refer to this article on Union-Find complexity for more details.
+
+In our case, the number of elements in the Union-Find data structure is equal to the number of people, and the number of operations on the Union-Find data structure is up to the number of logs.
+
+Let NN be the number of people and MM be the number of logs.
+
+Time Complexity: O(N + M \log M + M \alpha (N))O(N+MlogM+Mα(N))
+
+First of all, we sort the logs in the order of timestamp. The time complexity of (quick) sorting is O(M \log M)O(MlogM).
+
+Then we created a Union-Find data structure, which takes O(N)O(N) time to initialize the array of group IDs.
+
+We then iterate through the sorted logs. At each iteration, we invoke the union(a, b) function. According to the statement we made above, the amortized time complexity of the entire process is O(M \alpha (N))O(Mα(N)).
+
+To sum up, the overall time complexity of our algorithm is O(N+MlogM+Mα(N)).
+
+Space Complexity: O(N + M)O(N+M) or O(N + \log M)O(N+logM)
+
+The space complexity of our Union-Find data structure is O(N)O(N), because we keep track of the group ID for each individual.
+
+The space complexity of the sorting algorithm depends on the implementation of each program language.
+
+For instance, the list.sort() function in Python is implemented with the Timsort algorithm whose space complexity is O(M)O(M). While in Java, the Arrays.sort() is implemented as a variant of quicksort algorithm whose space complexity is O(\log{M})O(logM).
+
+To sum up, the overall space complexity of the algorithm is O(N+M) for Python and O(N+logM) for Java.
+*/ 
 
 // official solution
 class Solution {
@@ -184,7 +239,7 @@ class Solution {
 }
 class UnionFind {
     private int[] group;
-    private int[] rank;
+    private int[] rank;//rank here means the number of people in this group
 
     public UnionFind(int size) {
         this.group = new int[size];
