@@ -1,3 +1,31 @@
+class Solution {
+public:
+    int networkDelayTime(vector<vector<int>>& times, int n, int k) {
+        unordered_map<int, unordered_map<int, int>>graph;
+        vector<int>dist(n+1, INT_MAX);
+        for (auto& it: times) {
+            graph[it[0]][it[1]] = it[2];
+        }
+        queue<pair<int, int>>pos;
+        pos.push({k, 0});
+        pair<int, int>next;
+        unordered_set<int>beenTo;
+        int ans = -1;
+        while (!pos.empty()) {
+            next = pos.front();
+            pos.pop();
+            if (dist[next.first] <= next.second) continue;
+            dist[next.first] = next.second;
+            beenTo.insert(next.first);
+            for (auto& it : graph[next.first]) {
+                pos.push({it.first,next.second+it.second});
+            }
+        }
+        if (beenTo.size() != n) return -1;
+        for (int i =1; i <= n; i++) ans = max(ans, dist[i]);
+        return ans;
+    }
+};
 //using dijkstra algs pls refer to https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/
 class Solution {
 public:
