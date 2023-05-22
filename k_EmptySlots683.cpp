@@ -1,3 +1,31 @@
+/*
+ * You have n bulbs in a row numbered from 1 to n. Initially, all the bulbs are turned off. We turn on exactly one bulb every day until all bulbs are on after n days.
+
+You are given an array bulbs of length n where bulbs[i] = x means that on the (i+1)th day, we will turn on the bulb at position x where i is 0-indexed and x is 1-indexed.
+
+Given an integer k, return the minimum day number such that there exists two turned on bulbs that have exactly k bulbs between them that are all turned off. If there isn't such day, return -1.
+ */
+
+/*
+ * The idea is to use an array days[] to record each position's flower's blooming day. That means days[i] is the blooming day of the flower in position i+1. We just need to find a subarray days[left, left+1,..., left+k-1, right] which satisfies: for any i = left+1,..., left+k-1, we can have days[left] < days[i] && days[right] < days[i]. Then, the result is max(days[left], days[right]).
+ */
+class Solution {
+public:
+    int kEmptySlots(vector<int>& bulbs, int k) {
+        int len = bulbs.size(), left = 0, right = k+1, ans = INT_MAX;
+        vector<int>day(len);
+        for (int i = 0; i < len; i++) day[bulbs[i]-1] = i+1;
+        for (int i = 0; right < len; i++) {
+            if (day[i] < day[left] || day[i] <= day[right]) {
+                if (i == right) ans = min(ans, max(day[left], day[right]));
+                left = i, right = k+1+i;
+            }
+        }
+        return (ans == INT_MAX)? -1 : ans;
+    }
+};
+
+
 class Solution {
 public: 
     int kEmptySlots(vector<int>& bulbs, int K) {
