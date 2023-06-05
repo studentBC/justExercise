@@ -1,3 +1,49 @@
+/*
+We can compute the maximum width of a rectangle that ends at a given coordinate in constant time. We do this by keeping track of the number of consecutive ones each square in each row. As we iterate over each row we update the maximum possible width at that point. This is done using row[i] = row[i - 1] + 1 if row[i] == '1'.
+
+Current
+
+Once we know the maximum widths for each point above a given point, we can compute the maximum rectangle with the lower right corner at that point in linear time. As we iterate up the column, we know that the maximal width of a rectangle spanning from the original point to the current point is the running minimum of each maximal width we have encountered.
+
+We define:
+
+maxWidth=min(maxWidth,widthHere)maxWidth = min(maxWidth, widthHere)maxWidth=min(maxWidth,widthHere)
+
+curArea=maxWidth∗(currentRow−originalRow+1)curArea = maxWidth * (currentRow - originalRow + 1)curArea=maxWidth∗(currentRow−originalRow+1)
+
+maxArea=max(maxArea,curArea)maxArea = max(maxArea, curArea)maxArea=max(maxArea,curArea)
+
+The following animation makes this more clear. Given the maximal width of all points above it, let's calculate the maximum area of any rectangle at the bottom yellow square:
+
+Current
+
+Repeating this process for every point in our input gives us the global maximum.
+
+Note that our method of precomputing our maximum width essentially breaks down our input into a set of histograms, with each column being a new histogram. We are computing the maximal area for each histogram.
+*/
+
+
+class Solution {
+public:
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        int row = matrix.size(), col = matrix[0].size(), ans = 0, width;
+        vector<vector<int>>dp(row, vector<int>(col, 0));
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (matrix[i][j] == '1') {
+                    dp[i][j] = j == 0?1 : dp[i][j-1]+1;
+                    width = dp[i][j];
+                    for (int k = i; k > -1; k--) {
+                        width = min(width, dp[k][j]);
+                        ans = max(ans, width*(i-k+1));
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+};
+
 class Solution {
 public:
 	int findW (int start, vector<char>row) {
